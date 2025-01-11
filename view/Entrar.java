@@ -1,6 +1,8 @@
 package view;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Entrar extends javax.swing.JFrame {
@@ -9,6 +11,7 @@ public class Entrar extends javax.swing.JFrame {
     public Entrar() {
         initComponents();
         setLocationRelativeTo(null);
+        clicar();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -131,6 +134,17 @@ public class Entrar extends javax.swing.JFrame {
 
     public static ArrayList<String> getNomeDigitado() {
         return nomeDigitado;
+    }
+
+    private void clicar() {
+        txtNome.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnEntrar.doClick();
+                }
+            }
+        });
     }
 
     public static void main(String args[]) {

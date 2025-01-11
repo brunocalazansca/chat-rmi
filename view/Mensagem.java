@@ -4,10 +4,8 @@ import chat.Chat;
 import chat.Cliente;
 
 import javax.swing.*;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Mensagem extends javax.swing.JFrame {
@@ -18,9 +16,9 @@ public class Mensagem extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         lblMensagem.setEditable(false);
-        ArrayList<String> nomeColetado = Entrar.getNomeDigitado();
-        String nome = nomeColetado.getLast();
-        txtNomeChat.setText(nome);
+
+        clicar();
+        setNome();
     }
 
     @SuppressWarnings("unchecked")
@@ -212,6 +210,7 @@ public class Mensagem extends javax.swing.JFrame {
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {
         getMensagem();
+
     }
 
     private void btnHistoricoActionPerformed(java.awt.event.ActionEvent evt) {
@@ -238,6 +237,23 @@ public class Mensagem extends javax.swing.JFrame {
         txtMensagemDigitada.setText("");
         historicoMensagem.clear();
         historicoMensagem.add(chatFormatado);
+    }
+
+    private void clicar() {
+        txtMensagemDigitada.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnEnviar.doClick();
+                }
+            }
+        });
+    }
+
+    private void setNome(){
+        ArrayList<String> nomeColetado = Entrar.getNomeDigitado();
+        String nome = nomeColetado.getLast();
+        txtNomeChat.setText(nome);
     }
 
     public static void main(String args[]) {
