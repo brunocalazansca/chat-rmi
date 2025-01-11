@@ -1,39 +1,44 @@
-import java.lang.reflect.Array;
+package chat;
+
+import view.Entrar;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class Servidor implements Chat{
-    public Servidor() {}
+public class Servidor implements Chat {
+    public Servidor() {
+    }
 
     public static final ArrayList<String> historicoMensagem = new ArrayList<>();
+    private ArrayList<Chat> clientes = new ArrayList<>();
 
     public ArrayList<String> historico(String nome, String mensagem) throws RemoteException {
         String formatoMensagem = nome + ": " + mensagem;
-
         historicoMensagem.add(formatoMensagem);
-
         return new ArrayList<>(historicoMensagem);
     }
 
-    public String mensagem(ArrayList<String> historico) throws RemoteException {
-        String mensagem = historico.getLast();
-        return mensagem;
-    }
-
-    public static void main(String[] args) {
+    public void iniciarServidor() {
         try {
             Servidor servidor = new Servidor();
             Chat stub = (Chat) UnicastRemoteObject.exportObject(servidor, 0);
             Registry registry = LocateRegistry.getRegistry();
             registry.bind("Chat", stub);
-
             System.err.println("Servidor está pronto...");
 
         } catch (Exception e) {
             System.err.println("Erro no Servidor:" + e.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        Servidor servidor = new Servidor();
+        servidor.iniciarServidor();
+
+        Entrar chat = new Entrar();
+        chat.setVisible(true);
     }
 }
