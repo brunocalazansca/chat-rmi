@@ -13,7 +13,6 @@ public class Servidor implements Chat {
     }
 
     public static final ArrayList<String> historicoMensagem = new ArrayList<>();
-    private ArrayList<Chat> clientes = new ArrayList<>();
 
     public ArrayList<String> historico(String nome, String mensagem) throws RemoteException {
         String formatoMensagem = nome + ": " + mensagem;
@@ -23,14 +22,20 @@ public class Servidor implements Chat {
 
     public void iniciarServidor() {
         try {
-            Servidor servidor = new Servidor();
-            Chat stub = (Chat) UnicastRemoteObject.exportObject(servidor, 0);
-            Registry registry = LocateRegistry.getRegistry();
+            Chat stub = (Chat) UnicastRemoteObject.exportObject(this, 0);
+            Registry registry ;
+            try {
+                registry = LocateRegistry.getRegistry(1099);
+                registry.list();
+
+            } catch (RemoteException e) {
+                registry = LocateRegistry.createRegistry(1099);
+            }
             registry.bind("Chat", stub);
             System.err.println("Servidor está pronto...");
 
         } catch (Exception e) {
-            System.err.println("Erro no Servidor:" + e.getMessage());
+            System.err.println("Erro no Servidor: " + e.getMessage());
         }
     }
 

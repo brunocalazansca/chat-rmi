@@ -6,5 +6,4 @@ import java.util.ArrayList;
 
 public interface Chat extends Remote {
     ArrayList<String> historico(String nome, String mensagem) throws RemoteException;
-    void iniciarServidor() throws RemoteException;
 }

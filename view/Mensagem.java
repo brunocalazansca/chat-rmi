@@ -1,7 +1,9 @@
 package view;
 
 import chat.Chat;
+import chat.Cliente;
 
+import javax.swing.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -10,13 +12,14 @@ import java.util.ArrayList;
 
 public class Mensagem extends javax.swing.JFrame {
     public static ArrayList<String> historicoMensagem = new ArrayList<>();
+    public static ArrayList<String> nomeEMensagem = new ArrayList<>();
 
     public Mensagem() {
         initComponents();
         setLocationRelativeTo(null);
         lblMensagem.setEditable(false);
         ArrayList<String> nomeColetado = Entrar.getNomeDigitado();
-        String nome = nomeColetado.getLast().toString();
+        String nome = nomeColetado.getLast();
         txtNomeChat.setText(nome);
     }
 
@@ -208,9 +211,7 @@ public class Mensagem extends javax.swing.JFrame {
     }
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {
-        String nome = txtNomeChat.getText();
-        String mensagem = txtMensagemDigitada.getText();
-        getMensagem(nome, mensagem);
+        getMensagem();
     }
 
     private void btnHistoricoActionPerformed(java.awt.event.ActionEvent evt) {
@@ -225,28 +226,18 @@ public class Mensagem extends javax.swing.JFrame {
         this.dispose();
     }
 
-    private void getMensagem(String nome, String mensagem) {
-        try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            Chat stub = (Chat) registry.lookup("Chat");
-            ArrayList<String> mensagemEnviada = stub.historico(nome, mensagem);
-            String chatFormatado = String.join("\n", mensagemEnviada);
+    private void getMensagem() {
+        Cliente cliente = new Cliente();
+        String nome = txtNomeChat.getText();
+        String mensagem = txtMensagemDigitada.getText();
 
-            historicoMensagem.clear();
-            historicoMensagem.add(chatFormatado);
+        ArrayList<String> mensagemRecebida  = cliente.getMensagem(nome, mensagem);
+        String chatFormatado = String.join("\n", mensagemRecebida);
 
-            lblMensagem.setText(chatFormatado);
-            txtMensagemDigitada.setText("");
-
-        } catch (RemoteException | NotBoundException e) {
-            e.getMessage();
-        }
-    }
-
-    public void receberMensagem(String mensagem) {
-        // Atualizar a interface com a nova mensagem recebida
-        String chatAtualizado = lblMensagem.getText() + "\n" + mensagem;
-        lblMensagem.setText(chatAtualizado);
+        lblMensagem.setText(chatFormatado);
+        txtMensagemDigitada.setText("");
+        historicoMensagem.clear();
+        historicoMensagem.add(chatFormatado);
     }
 
     public static void main(String args[]) {
@@ -260,6 +251,10 @@ public class Mensagem extends javax.swing.JFrame {
 
     public static ArrayList<String> getHistoricoMensagem() {
         return historicoMensagem;
+    }
+
+    public static ArrayList<String> getNomeEMensagem() {
+        return nomeEMensagem;
     }
 
     private javax.swing.JButton btnEnviar;
