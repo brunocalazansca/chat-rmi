@@ -7,14 +7,20 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Servidor implements Chat {
     public Servidor() {
     }
 
-    public static final ArrayList<String> historicoMensagem = new ArrayList<>();
+    private final List<String> historicoMensagem = Collections.synchronizedList(new ArrayList<>());
 
     public ArrayList<String> historico(String nome, String mensagem) throws RemoteException {
+        if (mensagem.equalsIgnoreCase("")){
+            return new ArrayList<>();
+        }
+
         String formatoMensagem = nome + ": " + mensagem;
         historicoMensagem.add(formatoMensagem);
         return new ArrayList<>(historicoMensagem);
@@ -22,10 +28,11 @@ public class Servidor implements Chat {
 
     public void iniciarServidor() {
         try {
-            Chat stub = (Chat) UnicastRemoteObject.exportObject(this, 0);
+            Servidor servidor = new Servidor();
+            Chat stub = (Chat) UnicastRemoteObject.exportObject(servidor, 0);
             Registry registry ;
             try {
-                registry = LocateRegistry.getRegistry(1099);
+                registry = LocateRegistry.getRegistry();
                 registry.list();
 
             } catch (RemoteException e) {

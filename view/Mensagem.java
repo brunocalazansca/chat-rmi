@@ -1,10 +1,8 @@
 package view;
 
-import chat.Chat;
 import chat.Cliente;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -229,14 +227,20 @@ public class Mensagem extends javax.swing.JFrame {
         Cliente cliente = new Cliente();
         String nome = txtNomeChat.getText();
         String mensagem = txtMensagemDigitada.getText();
+        ArrayList<String> mensagemRecebida;
 
-        ArrayList<String> mensagemRecebida  = cliente.getMensagem(nome, mensagem);
-        String chatFormatado = String.join("\n", mensagemRecebida);
+        mensagemRecebida = cliente.getMensagem(nome, mensagem);
+        if (mensagemRecebida.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Nenhuma mensagem inserida. \nPor favor, digite uma mensagem!");
 
-        lblMensagem.setText(chatFormatado);
+        } else {
+            String chatFormatado = String.join("\n", mensagemRecebida);
+            lblMensagem.setText(chatFormatado);
+            historicoMensagem.clear();
+            historicoMensagem.add(chatFormatado);
+
+        }
         txtMensagemDigitada.setText("");
-        historicoMensagem.clear();
-        historicoMensagem.add(chatFormatado);
     }
 
     private void clicar() {

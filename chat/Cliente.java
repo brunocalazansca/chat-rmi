@@ -1,8 +1,5 @@
 package chat;
 
-import view.Mensagem;
-
-import javax.swing.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -18,23 +15,19 @@ public class Cliente {
 
             ArrayList<String> mensagemEnviada = chat.historico(nome, mensagem);
 
-            return mensagemEnviada;
+            if (mensagemEnviada == null || mensagemEnviada.isEmpty()) {
+                return new ArrayList<>();
+            } else {
+                return mensagemEnviada;
+            }
 
         } catch (Exception e){
             System.out.println("Erro no cliente: " + e.getMessage());
-            return null;
+            return new ArrayList<>();
         }
     }
 
     public static void main(String[] args) {
-        String host = (args.length < 1) ? "localhost" : args[0];
 
-        try{
-            Registry registry = LocateRegistry.getRegistry(host, 1099);
-            Chat chat = (Chat) registry.lookup("Chat");
-
-        } catch (Exception e){
-            System.out.println("Erro no cliente: " + e.getMessage());
-        }
     }
 }
