@@ -19,11 +19,12 @@ public class Servidor implements Chat {
     public ArrayList<String> historico(String nome, String mensagem) throws RemoteException {
         if (mensagem.equalsIgnoreCase("")){
             return new ArrayList<>();
+            
+        } else {
+            String formatoMensagem = nome + ": " + mensagem;
+            historicoMensagem.add(formatoMensagem);
+            return new ArrayList<>(historicoMensagem);
         }
-
-        String formatoMensagem = nome + ": " + mensagem;
-        historicoMensagem.add(formatoMensagem);
-        return new ArrayList<>(historicoMensagem);
     }
 
     public void iniciarServidor() {
