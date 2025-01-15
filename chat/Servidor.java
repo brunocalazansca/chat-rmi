@@ -19,7 +19,7 @@ public class Servidor implements Chat {
     public ArrayList<String> historico(String nome, String mensagem) throws RemoteException {
         if (mensagem.equalsIgnoreCase("")){
             return new ArrayList<>();
-            
+
         } else {
             String formatoMensagem = nome + ": " + mensagem;
             historicoMensagem.add(formatoMensagem);
@@ -40,7 +40,7 @@ public class Servidor implements Chat {
                 registry = LocateRegistry.createRegistry(1099);
             }
             registry.bind("Chat", stub);
-            System.err.println("Servidor está pronto...");
+            System.out.println("Servidor está pronto...");
 
         } catch (Exception e) {
             System.err.println("Erro no Servidor: " + e.getMessage());
