@@ -1,5 +1,7 @@
 package chat;
 
+import view.Entrar;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -27,7 +29,34 @@ public class Cliente {
         }
     }
 
-    public static void main(String[] args) {
+    public ArrayList<String> nomeEntrou(String nome){
+        try{
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            Chat chat = (Chat) registry.lookup("Chat");
+            ArrayList<String> nomeEntrou = chat.nomeEntrou(nome);
+            return new ArrayList<>(nomeEntrou);
 
+        } catch (Exception e){
+            System.out.println("Erro no cliente: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public ArrayList<String> nomeSaiu(String nome){
+        try{
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            Chat chat = (Chat) registry.lookup("Chat");
+            ArrayList<String> nomeSaiu = chat.nomeSaiu(nome);
+            return new ArrayList<>(nomeSaiu);
+
+        } catch (Exception e){
+            System.out.println("Erro no cliente: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public static void main(String[] args) {
+        Entrar entrar = new Entrar();
+        entrar.setVisible(true);
     }
 }

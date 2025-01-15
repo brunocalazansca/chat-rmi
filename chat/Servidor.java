@@ -1,7 +1,4 @@
 package chat;
-
-import view.Entrar;
-
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,6 +12,9 @@ public class Servidor implements Chat {
     }
 
     private final List<String> historicoMensagem = Collections.synchronizedList(new ArrayList<>());
+    private final ArrayList<String> nomeEntrou = new ArrayList<>();
+    private final ArrayList<String> nomeSaiu = new ArrayList<>();
+    private final ArrayList<String> mensagemAtual = new ArrayList<>();
 
     public ArrayList<String> historico(String nome, String mensagem) throws RemoteException {
         if (mensagem.equalsIgnoreCase("")){
@@ -25,6 +25,21 @@ public class Servidor implements Chat {
             historicoMensagem.add(formatoMensagem);
             return new ArrayList<>(historicoMensagem);
         }
+    }
+
+    public ArrayList<String> nomeEntrou(String nome) throws RemoteException {
+        nomeEntrou.add(nome);
+        return new ArrayList<>(nomeEntrou);
+    }
+
+    public ArrayList<String> nomeSaiu(String nome) throws RemoteException {
+        nomeSaiu.add(nome);
+        return new ArrayList<>(nomeSaiu);
+    }
+
+    public ArrayList<String> mensagemAtual (String nome, String mensagem) throws RemoteException {
+        mensagemAtual.add(historico(nome, mensagem).getLast());
+        return mensagemAtual;
     }
 
     public void iniciarServidor() {
@@ -50,8 +65,5 @@ public class Servidor implements Chat {
     public static void main(String[] args) {
         Servidor servidor = new Servidor();
         servidor.iniciarServidor();
-
-        Entrar chat = new Entrar();
-        chat.setVisible(true);
     }
 }

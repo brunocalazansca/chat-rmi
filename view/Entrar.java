@@ -1,11 +1,14 @@
 package view;
 
+import chat.Cliente;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Entrar extends javax.swing.JFrame {
-    public static ArrayList<String> nomeDigitado = new ArrayList<>();
+    public static ArrayList<String> nomeEntrou = new ArrayList<>();
+    Cliente cliente = new Cliente();
 
     public Entrar() {
         initComponents();
@@ -115,12 +118,13 @@ public class Entrar extends javax.swing.JFrame {
     }
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {
+
         if (txtNome.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Insira seu nome!");
         } else {
             String nome = txtNome.getText();
-            nomeDigitado.add(nome);
-            JOptionPane.showMessageDialog(null, "Bem-Vindo, " + nome);
+            nomeEntrou = cliente.nomeEntrou(nome);
+            JOptionPane.showMessageDialog(null, "Bem-Vindo, " + nomeEntrou.getLast());
 
             new Mensagem().setVisible(true);
             this.dispose();
@@ -132,7 +136,7 @@ public class Entrar extends javax.swing.JFrame {
     }
 
     public static ArrayList<String> getNomeDigitado() {
-        return nomeDigitado;
+        return nomeEntrou;
     }
 
     private void clicar() {
