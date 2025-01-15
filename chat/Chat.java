@@ -8,5 +8,4 @@ public interface Chat extends Remote {
     ArrayList<String> historico(String nome, String mensagem) throws RemoteException;
     ArrayList<String> nomeEntrou(String nome) throws RemoteException;
     ArrayList<String> nomeSaiu(String nome) throws RemoteException;
-    ArrayList<String> mensagemAtual(String nome, String mensagem) throws RemoteException;
 }

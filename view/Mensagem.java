@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 public class Mensagem extends javax.swing.JFrame {
     public static ArrayList<String> historicoMensagem = new ArrayList<>();
-    public static ArrayList<String> nomeEMensagem = new ArrayList<>();
     Cliente cliente = new Cliente();
 
     public Mensagem() {
@@ -243,7 +242,7 @@ public class Mensagem extends javax.swing.JFrame {
 
     private void btnHistoricoActionPerformed(java.awt.event.ActionEvent evt) {
         new Historico().setVisible(true);
-        this.dispose();
+        // this.dispose();
     }
 
     private void txtMensagemDigitadaActionPerformed(java.awt.event.ActionEvent evt) {
@@ -266,11 +265,20 @@ public class Mensagem extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Nenhuma mensagem inserida. \nPor favor, digite uma mensagem!");
 
         } else {
-            String chatFormatado = String.join("\n", mensagemRecebida);
-            lblMensagem.setText(chatFormatado);
-            historicoMensagem.clear();
-            historicoMensagem.add(chatFormatado);
+            String nomeEntrou = lblMensagem.getText();
+            ArrayList<String> listaNomesEntrou = new ArrayList<>(Arrays.asList(nomeEntrou.split(", ")));
+            String chatFormatado = String.join("\n", mensagemRecebida.getLast());
 
+            if (listaNomesEntrou.getLast().contains("entrou")) {
+                String mensagemComEntrou = listaNomesEntrou.getLast() + "\n" + chatFormatado;
+                historicoMensagem.clear();
+                historicoMensagem.add(mensagemComEntrou);
+                lblMensagem.setText(mensagemComEntrou);
+            } else {
+                historicoMensagem.clear();
+                historicoMensagem.add(chatFormatado);
+                lblMensagem.setText(chatFormatado);
+            }
         }
         txtMensagemDigitada.setText("");
     }
@@ -289,16 +297,21 @@ public class Mensagem extends javax.swing.JFrame {
     private void setNomeEntrou(){
         ArrayList<String> nomeColetado = Entrar.getNomeDigitado();
         String nome = nomeColetado.getLast();
+        String mensagemEntrou = nome + " entrou.";
         txtNome.setText(nome);
         lblConectadas.setText(nome);
+        lblMensagem.setText(mensagemEntrou);
+        historicoMensagem.clear();
+        historicoMensagem.add(mensagemEntrou);
     }
 
-    private void setNomeSaiu(){
+    private void setNomeSaiu() {
         String nomeSaiu = txtNome.getText();
         ArrayList<String> nomeColetado = cliente.nomeSaiu(nomeSaiu);
         Entrar.getNomeDigitado().remove(nomeColetado.toString());
-        String mensagemSaida = nomeColetado.getLast() + " saiu.";
-        lblMensagem.setText(mensagemSaida);
+        String mensagemSaiu = nomeColetado.getLast() + " saiu.";
+        lblMensagem.setText(lblMensagem.getText() + "\n" +mensagemSaiu);
+        historicoMensagem.add(mensagemSaiu);
 
         // Remove o noma da lista de pessoas conectadas
         String nomesConectados = lblConectadas.getText();
@@ -306,7 +319,6 @@ public class Mensagem extends javax.swing.JFrame {
         listaNomes.removeIf(nome -> nome.equalsIgnoreCase(nomeSaiu));
         String nomesAtualizados = String.join(", ", listaNomes);
         lblConectadas.setText(nomesAtualizados);
-
     }
 
     public static ArrayList<String> getHistoricoMensagem() {
