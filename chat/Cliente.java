@@ -1,57 +1,132 @@
 package chat;
 
 import view.Entrar;
-
+import view.Mensagem;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Cliente {
-    public Cliente() {
+
+public class Cliente extends UnicastRemoteObject implements ICliente{
+    private static List<String> mensagens = new ArrayList<>();
+    private static Registry registry;
+    private static Chat chat;
+    private static ICliente cliente;
+    private String nome;
+    private static Mensagem viewMensagem;
+
+    public static void setViewMensagem(Mensagem mensagem) {
+        viewMensagem = mensagem;
     }
 
-    public ArrayList<String> getMensagem(String nome, String mensagem){
-        try{
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            Chat chat = (Chat) registry.lookup("Chat");
+    public static Registry getRegistry() {
+        return registry;
+    }
 
-            ArrayList<String> mensagemEnviada = chat.historico(nome, mensagem);
+    public static void setRegistry(Registry registry) {
+        Cliente.registry = registry;
+    }
 
-            if (mensagemEnviada == null || mensagemEnviada.isEmpty()) {
-                return new ArrayList<>();
-            } else {
-                return mensagemEnviada;
-            }
+    public List<String> getMensagens() {
+        return mensagens;
+    }
 
-        } catch (Exception e){
-            System.out.println("Erro no cliente: " + e.getMessage());
-            return new ArrayList<>();
+    public static Chat getChat() {
+        return chat;
+    }
+
+    public static void setChat(Chat chat) {
+        Cliente.chat = chat;
+    }
+
+    public static ICliente getCliente() {
+        return cliente;
+    }
+
+    public static void setCliente(ICliente cliente) {
+        Cliente.cliente = cliente;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Cliente(String nome) throws RemoteException {
+        super();
+        setNome(nome);
+    }
+
+    @Override
+    public void atualizarMensagens(String mensagem) {
+        if (viewMensagem != null) {
+            viewMensagem.adicionarMensagem(mensagem);
+        } else {
+            System.err.println("Erro: View de mensagem não inicializada.");
         }
     }
 
-    public ArrayList<String> nomeEntrou(String nome){
-        try{
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            Chat chat = (Chat) registry.lookup("Chat");
-            ArrayList<String> nomeEntrou = chat.nomeEntrou(nome);
-            return new ArrayList<>(nomeEntrou);
-
-        } catch (Exception e){
-            System.out.println("Erro no cliente: " + e.getMessage());
-            return new ArrayList<>();
+    public void entrarChat(){
+        try {
+            chat.entrarChat(cliente, nome);
+        } catch (Exception e) {
+            System.err.println("Erro ao entrar no chat: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    public ArrayList<String> nomeSaiu(String nome){
-        try{
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            Chat chat = (Chat) registry.lookup("Chat");
-            ArrayList<String> nomeSaiu = chat.nomeSaiu(nome);
-            return new ArrayList<>(nomeSaiu);
+    public void sairChat(){
+        try {
+            chat.sairChat(cliente, nome);
+        } catch (Exception e) {
+            System.err.println("Erro ao entrar sair do chat: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-        } catch (Exception e){
-            System.out.println("Erro no cliente: " + e.getMessage());
-            return new ArrayList<>();
+    public void enviarMensagem(String mensagem) {
+        try {
+            chat.enviarMensagem(nome, mensagem);
+        } catch (Exception e) {
+            System.err.println("Erro ao enviar mensagem: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void historicoMensagens() {
+        try {
+            mensagens.clear();
+            mensagens.addAll(chat.obterMensagens());
+        } catch (Exception e) {
+            System.err.println("Erro ao registrar cliente: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void registrarCliente(String nome) {
+        try {
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+
+            Chat chat = (Chat) registry.lookup("Chat");
+
+            ICliente cliente = new Cliente(nome);
+
+            chat.registrarCliente(cliente);
+
+            setRegistry(registry);
+            setChat(chat);
+            setCliente(cliente);
+
+            System.out.println("Cliente registrado no servidor com sucesso!");
+        } catch (Exception e) {
+            System.err.println("Erro ao registrar cliente: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

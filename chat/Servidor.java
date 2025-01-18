@@ -4,66 +4,65 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Servidor implements Chat {
     public Servidor() {
     }
 
-    private final List<String> historicoMensagem = Collections.synchronizedList(new ArrayList<>());
-    private final ArrayList<String> nomeEntrou = new ArrayList<>();
-    private final ArrayList<String> nomeSaiu = new ArrayList<>();
-    private final ArrayList<String> mensagemAtual = new ArrayList<>();
+    private final List<String> mensagens = new ArrayList<>();
+    private final List<ICliente> iclientes = new ArrayList<>();
 
-    public ArrayList<String> historico(String nome, String mensagem) throws RemoteException {
-        if (mensagem.equalsIgnoreCase("")){
-            return new ArrayList<>();
-
-        } else {
-            String formatoMensagem = nome + ": " + mensagem;
-            historicoMensagem.add(formatoMensagem);
-            return new ArrayList<>(historicoMensagem);
+    @Override
+    public synchronized void entrarChat(ICliente cliente, String nome) throws RemoteException {
+        String msg = nome + " entrou no chat";
+        mensagens.add(msg);
+        for (ICliente icliente : iclientes) {
+            icliente.atualizarMensagens(msg);
         }
     }
 
-    public ArrayList<String> nomeEntrou(String nome) throws RemoteException {
-        nomeEntrou.add(nome);
-        return new ArrayList<>(nomeEntrou);
-    }
-
-    public ArrayList<String> nomeSaiu(String nome) throws RemoteException {
-        nomeSaiu.add(nome);
-        return new ArrayList<>(nomeSaiu);
-    }
-
-    public ArrayList<String> mensagemAtual (String nome, String mensagem) throws RemoteException {
-        mensagemAtual.add(historico(nome, mensagem).getLast());
-        return mensagemAtual;
-    }
-
-    public void iniciarServidor() {
-        try {
-            Servidor servidor = new Servidor();
-            Chat stub = (Chat) UnicastRemoteObject.exportObject(servidor, 0);
-            Registry registry ;
-            try {
-                registry = LocateRegistry.getRegistry();
-                registry.list();
-
-            } catch (RemoteException e) {
-                registry = LocateRegistry.createRegistry(1099);
-            }
-            registry.bind("Chat", stub);
-            System.out.println("Servidor está pronto...");
-
-        } catch (Exception e) {
-            System.err.println("Erro no Servidor: " + e.getMessage());
+    @Override
+    public synchronized void sairChat(ICliente cliente, String nome) throws RemoteException {
+        String msg = nome + " saiu do chat";
+        mensagens.add(msg);
+        iclientes.remove(cliente);
+        for (ICliente icliente : iclientes) {
+            icliente.atualizarMensagens(msg);
         }
+    }
+
+    @Override
+    public synchronized void enviarMensagem(String usuario, String mensagem) throws RemoteException {
+        String mensagemFormatada = usuario + ": " + mensagem;
+        mensagens.add(mensagemFormatada);
+        for (ICliente icliente : iclientes) {
+            icliente.atualizarMensagens(mensagemFormatada);
+        }
+    }
+
+    @Override
+    public synchronized void registrarCliente(ICliente cliente) throws RemoteException {
+        iclientes.add(cliente);
+        System.out.println("Cliente registrado: " + cliente);
+    }
+
+    @Override
+    public synchronized List<String> obterMensagens() throws RemoteException {
+        return new ArrayList<>(mensagens);
     }
 
     public static void main(String[] args) {
-        Servidor servidor = new Servidor();
-        servidor.iniciarServidor();
+        try {
+            Servidor servidor = new Servidor();
+            Chat stub = (Chat) UnicastRemoteObject.exportObject(servidor, 0);
+
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.rebind("Chat", stub);
+
+            System.out.println("Servidor de Chat pronto...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

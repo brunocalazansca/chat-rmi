@@ -1,21 +1,22 @@
 package view;
 
+import chat.Cliente;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Historico extends javax.swing.JFrame {
+    public static Cliente cliente;
+    private static List<String> historico = new ArrayList<>();
 
-    public Historico() {
+    public static void setCliente(Cliente cliente) {
+        Historico.cliente = cliente;
+    }
+
+    public Historico(Cliente cliente) {
         initComponents();
         setLocationRelativeTo(null);
         txtHistorico.setEditable(false);
-        try {
-            ArrayList<String> historico = Mensagem.getHistoricoMensagem();
-            String chatFormatado = String.join("\n", historico);
-            txtHistorico.setText(chatFormatado);
-
-        } catch (NullPointerException e) {
-            e.getMessage();
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -130,8 +131,10 @@ public class Historico extends javax.swing.JFrame {
         System.exit(0);
     }
 
-    private void setTxtHistorico(java.awt.event.ActionEvent evt) {
-
+    public void visualizarHistorico() {
+        cliente.historicoMensagens();
+        historico = cliente.getMensagens();
+        txtHistorico.append(historico+ "\n");
     }
 
     public static void main(String args[]) {
@@ -161,7 +164,7 @@ public class Historico extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Historico().setVisible(true);
+                new Historico(cliente).setVisible(true);
             }
         });
     }

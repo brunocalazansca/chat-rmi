@@ -7,8 +7,15 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Entrar extends javax.swing.JFrame {
-    public static ArrayList<String> nomeEntrou = new ArrayList<>();
-    Cliente cliente = new Cliente();
+    private Cliente cliente;
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
 
     public Entrar() {
         initComponents();
@@ -118,25 +125,34 @@ public class Entrar extends javax.swing.JFrame {
     }
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {
-
         if (txtNome.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Insira seu nome!");
         } else {
             String nome = txtNome.getText();
-            nomeEntrou = cliente.nomeEntrou(nome);
-            JOptionPane.showMessageDialog(null, "Bem-Vindo, " + nomeEntrou.getLast());
 
-            new Mensagem().setVisible(true);
-            this.dispose();
+            try {
+                Cliente cliente = new Cliente(nome);
+                setCliente(cliente);
+
+                cliente.registrarCliente(nome);
+
+                JOptionPane.showMessageDialog(null, "Bem-Vindo, " + nome + "!");
+
+                // Abre a interface de chat
+                Mensagem mensagem = new Mensagem(nome, cliente);
+                cliente.setViewMensagem(mensagem);
+                cliente.entrarChat();
+                mensagem.setVisible(true);
+                this.dispose();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "ce taor: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {
+        cliente.sairChat();
         System.exit(0);
-    }
-
-    public static ArrayList<String> getNomeDigitado() {
-        return nomeEntrou;
     }
 
     private void clicar() {
