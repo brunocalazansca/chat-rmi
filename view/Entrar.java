@@ -4,7 +4,6 @@ import chat.Cliente;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 public class Entrar extends javax.swing.JFrame {
     private Cliente cliente;
@@ -118,8 +117,7 @@ public class Entrar extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
-
+    }// </editor-fold>//GEN-END:initComponen
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {
 
     }
@@ -140,7 +138,7 @@ public class Entrar extends javax.swing.JFrame {
 
                 // Abre a interface de chat
                 Mensagem mensagem = new Mensagem(nome, cliente);
-                cliente.setViewMensagem(mensagem);
+                Cliente.setViewMensagem(mensagem);
                 cliente.entrarChat();
                 mensagem.setVisible(true);
                 this.dispose();
@@ -151,7 +149,6 @@ public class Entrar extends javax.swing.JFrame {
     }
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {
-        cliente.sairChat();
         System.exit(0);
     }
 

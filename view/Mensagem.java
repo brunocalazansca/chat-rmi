@@ -3,8 +3,7 @@ package view;
 import chat.Cliente;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class Mensagem extends javax.swing.JFrame {
     private static String nome;
@@ -12,6 +11,10 @@ public class Mensagem extends javax.swing.JFrame {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    private String getNome () {
+        return nome;
     }
 
     public void setCliente(Cliente cliente) {
@@ -26,6 +29,8 @@ public class Mensagem extends javax.swing.JFrame {
             initComponents();
             setLocationRelativeTo(null);
             lblMensagem.setEditable(false);
+            lblConectadas.setEditable(false);
+            txtNome.setText(getNome());
 
             clicar();
         } catch (Exception e) {
@@ -33,7 +38,6 @@ public class Mensagem extends javax.swing.JFrame {
         }
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -257,7 +261,6 @@ public class Mensagem extends javax.swing.JFrame {
     private void btnHistoricoActionPerformed(java.awt.event.ActionEvent evt) {
         Historico historico = new Historico(cliente);
         historico.setVisible(true);
-        this.dispose();
     }
 
     private void txtMensagemDigitadaActionPerformed(java.awt.event.ActionEvent evt) {
@@ -285,6 +288,13 @@ public class Mensagem extends javax.swing.JFrame {
         lblMensagem.repaint();
     }
 
+    public void usuariosConectados (List<String> nome) {
+        lblConectadas.setText("");
+        for (String usuario : nome) {
+            lblConectadas.append(usuario + "\n");
+        }
+    }
+
     public void enviarMensagem(String mensagem) {
         cliente.enviarMensagem(mensagem);
     }
@@ -301,7 +311,6 @@ public class Mensagem extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
-
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {

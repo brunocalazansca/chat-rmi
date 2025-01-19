@@ -1,6 +1,5 @@
 package chat;
 
-import chat.ICliente;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;

@@ -17,6 +17,7 @@ public class Historico extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         txtHistorico.setEditable(false);
+        visualizarHistorico();
     }
 
     @SuppressWarnings("unchecked")
@@ -134,15 +135,14 @@ public class Historico extends javax.swing.JFrame {
     public void visualizarHistorico() {
         cliente.historicoMensagens();
         historico = cliente.getMensagens();
-        txtHistorico.append(historico+ "\n");
+
+        // Recebe a lista e passa para uma string e separa cada mensagem utilizando um \n.
+        String historicoFormatado = String.join("\n", historico);
+        txtHistorico.append(historicoFormatado + "\n");
     }
 
     public static void main(String args[]) {
 
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -159,8 +159,6 @@ public class Historico extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Historico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

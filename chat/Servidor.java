@@ -1,9 +1,11 @@
 package chat;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Servidor implements Chat {
@@ -12,13 +14,16 @@ public class Servidor implements Chat {
 
     private final List<String> mensagens = new ArrayList<>();
     private final List<ICliente> iclientes = new ArrayList<>();
+    private final List<String> usuariosConectados = new ArrayList<>();
 
     @Override
     public synchronized void entrarChat(ICliente cliente, String nome) throws RemoteException {
         String msg = nome + " entrou no chat";
         mensagens.add(msg);
+        usuariosConectados.add(nome);
         for (ICliente icliente : iclientes) {
             icliente.atualizarMensagens(msg);
+            icliente.atualizarConexoes(usuariosConectados);
         }
     }
 
@@ -27,8 +32,10 @@ public class Servidor implements Chat {
         String msg = nome + " saiu do chat";
         mensagens.add(msg);
         iclientes.remove(cliente);
+        usuariosConectados.remove(nome);
         for (ICliente icliente : iclientes) {
             icliente.atualizarMensagens(msg);
+            icliente.atualizarConexoes(usuariosConectados);
         }
     }
 

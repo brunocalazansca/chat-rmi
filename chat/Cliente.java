@@ -2,6 +2,7 @@ package chat;
 
 import view.Entrar;
 import view.Mensagem;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -9,13 +10,13 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Cliente extends UnicastRemoteObject implements ICliente{
-    private static List<String> mensagens = new ArrayList<>();
+
+    private static final List<String> mensagens = new ArrayList<>();
     private static Registry registry;
     private static Chat chat;
     private static ICliente cliente;
-    private String nome;
+    private static String nome;
     private static Mensagem viewMensagem;
 
     public static void setViewMensagem(Mensagem mensagem) {
@@ -30,7 +31,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         Cliente.registry = registry;
     }
 
-    public List<String> getMensagens() {
+    public static List<String> getMensagens() {
         return mensagens;
     }
 
@@ -72,6 +73,15 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         }
     }
 
+    @Override
+    public void atualizarConexoes (List<String> nome) {
+        if (viewMensagem != null) {
+            viewMensagem.usuariosConectados(nome);
+        } else {
+            System.err.println("Erro: View de mensagem não inicializada.");
+        }
+    }
+
     public void entrarChat(){
         try {
             chat.entrarChat(cliente, nome);
@@ -99,7 +109,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         }
     }
 
-    public void historicoMensagens() {
+    public static void historicoMensagens() {
         try {
             mensagens.clear();
             mensagens.addAll(chat.obterMensagens());
