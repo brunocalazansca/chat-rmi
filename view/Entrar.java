@@ -8,10 +8,6 @@ import java.awt.event.KeyEvent;
 public class Entrar extends javax.swing.JFrame {
     private Cliente cliente;
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
@@ -122,9 +118,11 @@ public class Entrar extends javax.swing.JFrame {
 
     }
 
+    // Ao clicar no botão entrar, coleta o nome do campo e envia para o cliente
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {
         if (txtNome.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Insira seu nome!");
+
         } else {
             String nome = txtNome.getText();
 
@@ -140,6 +138,7 @@ public class Entrar extends javax.swing.JFrame {
                 Mensagem mensagem = new Mensagem(nome, cliente);
                 Cliente.setViewMensagem(mensagem);
                 cliente.entrarChat();
+
                 mensagem.setVisible(true);
                 this.dispose();
             } catch (Exception e) {
@@ -152,6 +151,7 @@ public class Entrar extends javax.swing.JFrame {
         System.exit(0);
     }
 
+    // Envento para acionar o botão Entrar quando apertar enter
     private void clicar() {
         txtNome.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override

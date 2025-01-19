@@ -272,6 +272,7 @@ public class Mensagem extends javax.swing.JFrame {
         this.dispose();
     }
 
+    // Coleta a mensagem do compo de texto e envia para o cliente
     private void getMensagem() {
         String mensagem = txtMensagemDigitada.getText();
 
@@ -283,11 +284,13 @@ public class Mensagem extends javax.swing.JFrame {
         txtMensagemDigitada.setText("");
     }
 
+    // Mostra a mensagem na tela
     public void adicionarMensagem(String mensagem) {
         lblMensagem.append(mensagem + "\n");
         lblMensagem.repaint();
     }
 
+    // Mostra os usuários conectados na label de usuários conectados
     public void usuariosConectados (List<String> nome) {
         lblConectadas.setText("");
         for (String usuario : nome) {
@@ -295,10 +298,12 @@ public class Mensagem extends javax.swing.JFrame {
         }
     }
 
+    // Envia a mensagem para o cliente
     public void enviarMensagem(String mensagem) {
         cliente.enviarMensagem(mensagem);
     }
 
+    // Envento para acionar o botão Entrar quando apertar enter
     private void clicar() {
         txtMensagemDigitada.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override

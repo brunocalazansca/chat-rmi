@@ -23,10 +23,6 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         viewMensagem = mensagem;
     }
 
-    public static Registry getRegistry() {
-        return registry;
-    }
-
     public static void setRegistry(Registry registry) {
         Cliente.registry = registry;
     }
@@ -35,24 +31,12 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         return mensagens;
     }
 
-    public static Chat getChat() {
-        return chat;
-    }
-
     public static void setChat(Chat chat) {
         Cliente.chat = chat;
     }
 
-    public static ICliente getCliente() {
-        return cliente;
-    }
-
     public static void setCliente(ICliente cliente) {
         Cliente.cliente = cliente;
-    }
-
-    public String getNome() {
-        return nome;
     }
 
     public void setNome(String nome) {
@@ -64,6 +48,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         setNome(nome);
     }
 
+    // Atualiza a mensagem de todos os usuários conectados
     @Override
     public void atualizarMensagens(String mensagem) {
         if (viewMensagem != null) {
@@ -73,6 +58,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         }
     }
 
+    // Atualiza a lista de usuários conectados
     @Override
     public void atualizarConexoes (List<String> nome) {
         if (viewMensagem != null) {
@@ -82,6 +68,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         }
     }
 
+    // Entra no chat
     public void entrarChat(){
         try {
             chat.entrarChat(cliente, nome);
@@ -91,6 +78,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         }
     }
 
+    // Remove o usuário do chat
     public void sairChat(){
         try {
             chat.sairChat(cliente, nome);
@@ -100,6 +88,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         }
     }
 
+    // Envia a mensagem de um usuário para o restante
     public void enviarMensagem(String mensagem) {
         try {
             chat.enviarMensagem(nome, mensagem);
@@ -109,6 +98,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         }
     }
 
+    // Atualiza o histórico de mensagens
     public static void historicoMensagens() {
         try {
             mensagens.clear();
@@ -119,6 +109,7 @@ public class Cliente extends UnicastRemoteObject implements ICliente{
         }
     }
 
+    // Regista o cliente no chat
     public void registrarCliente(String nome) {
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);

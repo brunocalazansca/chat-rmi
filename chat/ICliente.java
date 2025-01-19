@@ -8,5 +8,6 @@ public interface ICliente extends Remote {
     // Atualizar mensagens em tempo real
     void atualizarMensagens(String mensagem) throws RemoteException;
 
+    // Atualiza os usuários conectados em tempo real
     void atualizarConexoes (List<String> nome) throws RemoteException;
 }

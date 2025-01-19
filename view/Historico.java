@@ -9,10 +9,6 @@ public class Historico extends javax.swing.JFrame {
     public static Cliente cliente;
     private static List<String> historico = new ArrayList<>();
 
-    public static void setCliente(Cliente cliente) {
-        Historico.cliente = cliente;
-    }
-
     public Historico(Cliente cliente) {
         initComponents();
         setLocationRelativeTo(null);
@@ -132,9 +128,10 @@ public class Historico extends javax.swing.JFrame {
         System.exit(0);
     }
 
+    // Recebe o historico do cliente e mostra na tela
     public void visualizarHistorico() {
-        cliente.historicoMensagens();
-        historico = cliente.getMensagens();
+        Cliente.historicoMensagens();
+        historico = Cliente.getMensagens();
 
         // Recebe a lista e passa para uma string e separa cada mensagem utilizando um \n.
         String historicoFormatado = String.join("\n", historico);
