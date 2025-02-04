@@ -14,6 +14,7 @@ public class Historico extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         txtHistorico.setEditable(false);
         visualizarHistorico();
+        btnSair.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")

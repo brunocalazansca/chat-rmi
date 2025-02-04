@@ -17,7 +17,7 @@ public class Servidor implements Chat {
 
     // Adiciona o novo usuário no chat e atualiza para todos os usuários que permaneceram
     public synchronized void entrarChat(ICliente cliente, String nome) throws RemoteException {
-        String msg = nome + " entrou no chat";
+        String msg = nome + " entrou no chat.";
         mensagens.add(msg);
         usuariosConectados.add(nome);
         for (ICliente icliente : iclientes) {
@@ -29,7 +29,7 @@ public class Servidor implements Chat {
     // Remove o novo usuário no chat e atualiza para todos os usuários que permaneceram
     @Override
     public synchronized void sairChat(ICliente cliente, String nome) throws RemoteException {
-        String msg = nome + " saiu do chat";
+        String msg = nome + " saiu do chat.";
         mensagens.add(msg);
         iclientes.remove(cliente);
         usuariosConectados.remove(nome);
